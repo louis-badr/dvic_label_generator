@@ -79,7 +79,7 @@ Transform generateLabelLayout1(
                         Image(
                           height: sizeQR * 0.28,
                           //color: Colors.grey.shade900,
-                          image: const AssetImage('assets/favicon.png'),
+                          image: const AssetImage('favicon.png'),
                         ),
                       ],
                     ),
