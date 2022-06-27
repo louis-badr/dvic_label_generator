@@ -12,6 +12,7 @@ Transform generateLabelLayout1(
   double labelMargin = 50,
   double titleFontSize = 24,
 }) {
+  double sizeQR = 280;
   String? filename;
   bool groupIsVisible = false;
   if (group != null && group != "None") {
@@ -46,17 +47,15 @@ Transform generateLabelLayout1(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(labelCornerRadius - labelMargin),
-                    child: Image.network(
-                      urlImg,
-                      height: 300,
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(
+                          labelCornerRadius - labelMargin),
+                      child: Image(
+                        image: NetworkImage(urlImg),
+                      )),
                   SizedBox(width: labelMargin / 2),
                   SizedBox(
-                    height: 300,
-                    width: 300,
+                    height: sizeQR,
+                    width: sizeQR,
                     child: Stack(
                       alignment: Alignment.center,
                       children: <Widget>[
@@ -64,17 +63,23 @@ Transform generateLabelLayout1(
                           data: urlQR,
                           version: QrVersions.auto,
                           errorCorrectionLevel: 2,
+                          foregroundColor: Colors.grey.shade900,
                         ),
                         Container(
-                          height: 100,
-                          decoration: const BoxDecoration(
+                          height: sizeQR * 0.4,
+                          decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
+                            border: Border.all(
+                              width: 4,
+                              color: Colors.grey.shade900,
+                            ),
                           ),
                         ),
-                        const Image(
-                          height: 80,
-                          image: AssetImage('assets/favicon.png'),
+                        Image(
+                          height: sizeQR * 0.28,
+                          //color: Colors.grey.shade900,
+                          image: const AssetImage('assets/favicon.png'),
                         ),
                       ],
                     ),
@@ -83,45 +88,43 @@ Transform generateLabelLayout1(
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: labelMargin / 2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Visibility(
-                      visible: groupIsVisible,
-                      child: SizedBox(
-                        height: 60,
-                        child:
-                            Image(image: AssetImage('${filename}_no_text.png')),
-                      ),
-                    ),
-                    Visibility(
-                      visible: groupIsVisible,
-                      child: SizedBox(
-                        width: labelMargin / 2,
-                      ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: title,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: titleFontSize,
-                                  fontWeight: FontWeight.bold)),
-                          TextSpan(
-                            text: subtitle == null ? '' : '\n$subtitle',
-                            style: TextStyle(
-                                color: Colors.grey.shade700,
-                                fontSize: titleFontSize - 3,
-                                fontWeight: FontWeight.w500),
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Visibility(
+                        visible: groupIsVisible,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: labelMargin / 2),
+                          child: Image(
+                            height: 40,
+                            image: AssetImage('${filename}_no_text.png'),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: title,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: titleFontSize,
+                                    fontWeight: FontWeight.bold)),
+                            TextSpan(
+                              text: subtitle == null ? '' : '\n$subtitle',
+                              style: TextStyle(
+                                  color: Colors.grey.shade700,
+                                  fontSize: titleFontSize - 2,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Visibility(
@@ -132,7 +135,7 @@ Transform generateLabelLayout1(
                     abstract!,
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: titleFontSize - 5,
+                        fontSize: titleFontSize - 4,
                         fontWeight: FontWeight.w600),
                   ),
                 ),

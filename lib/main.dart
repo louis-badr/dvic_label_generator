@@ -187,6 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 final controller = ScreenshotController();
                                 final bytes =
                                     await controller.captureFromWidget(
+                                  delay: const Duration(milliseconds: 10),
                                   Material(
                                     child: generatedLabel,
                                   ),
