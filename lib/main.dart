@@ -57,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
       subtitle: "Math and Physics Playful Learning",
       abstract:
           "The interactive pool is a mathematics and physics learning platform using gamification. The research raised the efficiency of games and lives experiences in the learning process. A projector, a camera and an artificial intelligence transform any pool table into an augmented reality platform. Players discover physics and maths concepts with theoretical exercises applied on pool playing. This pedagogic platform can integrate classrooms to enhance students' motivation and learning.",
+      authors: ['Maxime BROUSSART', 'Louis GEISLER', 'Axel THEVENOT'],
+      supervisors: ['Clément DUHART'],
     );
   }
 
