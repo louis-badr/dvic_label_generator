@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:typed_data';
 import 'package:dvic_label_generator/components/label_generator.dart';
 import 'package:file_saver/file_saver.dart';
@@ -41,9 +40,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final subtitle = TextEditingController();
   final abstract = TextEditingController();
   final group = TextEditingController();
+  final authors = TextEditingController();
+  //final contributors = TextEditingController();
+  final supervisors = TextEditingController();
 
   Uint8List? bytes;
-  Transform? generatedLabel;
+  Widget? generatedLabel;
   String? dropdownValue;
 
   @override
@@ -69,6 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
     title.dispose();
     subtitle.dispose();
     abstract.dispose();
+    authors.dispose();
+    //contributors.dispose();
+    supervisors.dispose();
     super.dispose();
   }
 
@@ -162,6 +167,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         decoration:
                             const InputDecoration(labelText: 'Abstract'),
                       ),
+                      TextFormField(
+                        controller: authors,
+                        decoration: const InputDecoration(
+                            labelText: 'Authors',
+                            hintText: "Separate each author by a coma"),
+                      ),
+                      TextFormField(
+                        controller: supervisors,
+                        decoration: const InputDecoration(
+                            labelText: 'Supervisors',
+                            hintText: "Separate each supervisor by a coma"),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 25),
                         child: Row(
@@ -178,6 +195,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                       group: dropdownValue!,
                                       subtitle: subtitle.text,
                                       abstract: abstract.text,
+                                      authors: authors.text.split(','),
+                                      supervisors: supervisors.text.split(','),
                                     );
                                   }
                                 });
@@ -189,14 +208,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                 final controller = ScreenshotController();
                                 final bytes =
                                     await controller.captureFromWidget(
+                                  generatedLabel!,
                                   delay: const Duration(milliseconds: 10),
-                                  Material(
-                                    child: generatedLabel,
-                                  ),
+                                  pixelRatio: 1,
                                 );
                                 setState((() => this.bytes = bytes));
                                 await FileSaver.instance.saveFile(
-                                    '${title.text}_Label.png', bytes, 'png');
+                                  (title.text == '')
+                                      ? 'Example_Label'
+                                      : '${title.text}_Label',
+                                  bytes,
+                                  'pdf',
+                                  mimeType: MimeType.PDF,
+                                );
                               },
                               child: const Text('Download'),
                             ),

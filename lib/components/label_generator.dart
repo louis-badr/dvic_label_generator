@@ -1,8 +1,10 @@
+import 'package:barcode/barcode.dart';
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:dvic_label_generator/components/authors_widget.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
-Transform generateLabelLayout1(
+Widget generateLabelLayout1(
   String urlImg,
   String urlQR,
   String title, {
@@ -12,9 +14,12 @@ Transform generateLabelLayout1(
   List<String>? authors,
   //List<String>? contributors,
   List<String>? supervisors,
-  double labelCornerRadius = 60,
+  //double labelCornerRadius = 60,
   double labelMargin = 50,
-  double titleFontSize = 24,
+  double titleFontSize = 40,
+  double subtitleFontSize = 20,
+  double abstractFontSize = 20,
+  double authorsFontSize = 20,
 }) {
   double sizeQR = 280;
   String? filename;
@@ -30,13 +35,12 @@ Transform generateLabelLayout1(
     }
   }
 
-  return Transform.scale(
-    scale: 1,
-    child: Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(labelCornerRadius),
-          side: BorderSide(color: Colors.grey.shade500)),
+  return DottedBorder(
+    color: Colors.grey.shade400,
+    strokeWidth: 1,
+    strokeCap: StrokeCap.round,
+    dashPattern: const [16, 16],
+    child: Container(
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.all(labelMargin),
@@ -49,27 +53,24 @@ Transform generateLabelLayout1(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          labelCornerRadius - labelMargin),
+                      borderRadius: BorderRadius.circular(labelMargin / 4),
                       child: Image(
                         image: NetworkImage(urlImg),
                       )),
                   SizedBox(width: labelMargin / 2),
-                  SizedBox(
-                    height: sizeQR,
-                    width: sizeQR,
+                  Expanded(
                     child: Stack(
                       alignment: Alignment.center,
                       children: <Widget>[
-                        QrImage(
+                        BarcodeWidget(
+                          color: Colors.grey.shade900,
+                          barcode: Barcode.qrCode(
+                            errorCorrectLevel: BarcodeQRCorrectionLevel.medium,
+                          ),
                           data: urlQR,
-                          padding: EdgeInsets.zero,
-                          version: QrVersions.auto,
-                          errorCorrectionLevel: 2,
-                          foregroundColor: Colors.grey.shade900,
                         ),
                         Container(
-                          height: sizeQR * 0.4,
+                          height: sizeQR * 0.35,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
@@ -80,7 +81,7 @@ Transform generateLabelLayout1(
                           ),
                         ),
                         Image(
-                          height: sizeQR * 0.28,
+                          height: sizeQR * 0.25,
                           //color: Colors.grey.shade900,
                           image: const AssetImage('favicon.png'),
                         ),
@@ -119,7 +120,7 @@ Transform generateLabelLayout1(
                                 text: '\n$subtitle',
                                 style: TextStyle(
                                     color: Colors.grey.shade700,
-                                    fontSize: titleFontSize - 2,
+                                    fontSize: subtitleFontSize,
                                     fontWeight: FontWeight.normal),
                               ),
                           ],
@@ -138,18 +139,17 @@ Transform generateLabelLayout1(
                       abstract,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: titleFontSize - 4,
-                        fontWeight: FontWeight.bold,
+                        fontSize: abstractFontSize,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
                 ),
-              authorsWidget(authors, supervisors, labelMargin, titleFontSize),
+              authorsWidget(authors, supervisors, labelMargin, authorsFontSize),
             ],
           ),
         ),
       ),
     ),
   );
-  ;
 }
